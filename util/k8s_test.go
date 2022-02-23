@@ -1,8 +1,11 @@
 package util
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes/fake"
 	"path/filepath"
 	"testing"
 
@@ -17,4 +20,14 @@ func TestSTH(t *testing.T) {
 	}
 
 	fmt.Println(*kubeconfig)
+}
+
+func TestFake(t *testing.T) {
+	ctx := context.TODO()
+	clientset := fake.NewSimpleClientset()
+	podList, err := clientset.CoreV1().Pods("").List(ctx, metav1.ListOptions{})
+	if nil != err {
+		panic(err)
+	}
+	fmt.Println(podList)
 }

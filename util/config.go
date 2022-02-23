@@ -45,25 +45,44 @@ func initialize() {
 
 func Initialize() {
 	//configMapPath := os.Getenv("ENV_SYSTEM__CONFIGMAP_PATH")
-	prefix := "/etcd-secrets"
+	prefix := "etcd-secrets"
+	if !IsDir(prefix) {
+		log.Info("不存在/etcd-secrets证书目录文件")
+	} else {
+		log.Info("本地存在etcd-secrets证书目录文件")
+	}
 	EtcdConfigCaPath = prefix + "/etcd-ca"
 	EtcdConfigCertPath = prefix + "/etcd-cert"
 	EtcdConfigKeyPath = prefix + "/etcd-key"
 	EtcdConfigEndpoint = "https://" + os.Getenv("DCE_ETCD_SERVICE_HOST") + ":" + os.Getenv("DCE_ETCD_SERVICE_PORT_CLIENT_HTTPS")
 
-	if EtcdConfigCaPath != "" {
+	if existFile(EtcdConfigCaPath) {
 		ETCD_CA = EtcdConfigCaPath
+	} else {
+		log.Info("EtcdConfigCaPath不存在")
 	}
 
-	if EtcdConfigCertPath != "" {
+	if existFile(EtcdConfigCertPath) {
 		ETCD_CERT = EtcdConfigCertPath
+	} else {
+		log.Info("EtcdConfigCertPath不存在")
 	}
 
-	if EtcdConfigKeyPath != "" {
+	if existFile(EtcdConfigKeyPath) {
 		ETCD_KEY = EtcdConfigKeyPath
+	} else {
+		log.Infof("EtcdConfigKeyPath不存在")
 	}
 
-	if EtcdConfigEndpoint != "" {
+	if ETCD_URL == "" {
 		ETCD_URL = EtcdConfigEndpoint
 	}
+}
+
+func IsDir(path string) bool {
+	s, err := os.Stat(path)
+	if nil != err {
+		return false
+	}
+	return s.IsDir()
 }

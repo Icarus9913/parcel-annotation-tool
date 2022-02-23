@@ -6,6 +6,7 @@ ENV GO111MODULE=on \
     GOARCH=amd64 \
     GOPROXY="https://goproxy.cn,direct"
 
-WORKDIR /app
+WORKDIR /app/parcel-annotation-tool
 COPY * ./
-# RUN cd stupid-tool && go mod download && go build -ldflags="-w -s" -o annotationTool main.go
+#RUN go mod download && go build -ldflags="-w -s" -o annotationTool main.go
+RUN make all

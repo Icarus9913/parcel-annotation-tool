@@ -13,10 +13,10 @@ type EtcdV3Client struct {
 }
 
 func NewEtcd() (EtcdV3Client, error) {
-	log.Info("ETCD_CERT: ", ETCD_CERT)
-	log.Info("ETCD_KEY: ", ETCD_KEY)
-	log.Info("ETCD_CA: ", ETCD_CA)
-	log.Info("ETCD_URL: ", ETCD_URL)
+	//log.Info("ETCD_CERT: ", ETCD_CERT)
+	//log.Info("ETCD_KEY: ", ETCD_KEY)
+	//log.Info("ETCD_CA: ", ETCD_CA)
+	//log.Info("ETCD_URL: ", ETCD_URL)
 
 	tlsInfo := transport.TLSInfo{
 		CertFile:      ETCD_CERT,

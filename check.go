@@ -14,6 +14,16 @@ type Man struct {
 }
 
 func main() {
+	data := map[string]string{"ni": ""}
+	if _, ok := data["ni"]; ok {
+		fmt.Println("good")
+	} else {
+		fmt.Println("no")
+	}
+
+}
+
+func jj() {
 	d := Dog{Result: "wangwang"}
 	dd, _ := json.Marshal(d)
 

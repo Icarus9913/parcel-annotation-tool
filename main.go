@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
+	"parcel-annotation-tool/model"
+	"parcel-annotation-tool/util"
 	"strconv"
 	"strings"
-	"stupid-tool/model"
-	"stupid-tool/util"
 
 	logging "github.com/ipfs/go-log/v2"
 	"github.com/urfave/cli/v2"
@@ -91,6 +92,66 @@ func run(ctx context.Context, namespace, podName string) error {
 	if nil != err {
 		return errors.New("connect to k8s failed with err: " + err.Error())
 	}
+	hostname, err := os.Hostname()
+	if nil != err {
+		return err
+	}
+	etcdurl := ""
+
+	// 获取nodeName
+	nodeList, err := clientset.CoreV1().Nodes().List(ctx, metav1.ListOptions{})
+	if nil != err {
+		log.Error(err)
+		return err
+	}
+	for _, n := range nodeList.Items {
+		if n.Name == hostname {
+			for _, v := range n.Status.Addresses {
+				if v.Type == v1.NodeInternalIP {
+					etcdurl = v.Address
+				}
+			}
+		}
+	}
+
+	endpoints, err := clientset.CoreV1().Endpoints("kube-system").Get(ctx, "dce-etcd", metav1.GetOptions{})
+	if nil != err {
+		log.Error(err)
+		return err
+	}
+	for _, sub := range endpoints.Subsets {
+		for _, v := range sub.Ports {
+			if v.Name == "client-https" {
+				etcdurl = fmt.Sprint(etcdurl, ":", v.Port)
+			}
+		}
+	}
+
+	util.ETCD_URL = etcdurl
+
+	/*	list, err := clientset.DiscoveryV1beta1().EndpointSlices("kube-system").List(ctx, metav1.ListOptions{})
+		if nil != err {
+			log.Error(err)
+			return err
+		}
+		for _, v := range list.Items {
+
+			if strings.HasPrefix(v.Name, "dce-etcd") {
+				for _, e := range v.Endpoints {
+					if *e.Hostname == nodeName {
+						etcdurl = e.Addresses[0]
+						break
+					}
+				}
+
+				for _, vv := range v.Ports {
+					if *vv.Name == "client-https" {
+						etcdurl = fmt.Sprint(etcdurl, *vv.Port)
+						break
+					}
+				}
+			}
+		}*/
 
 	// specific pod
 	if "" != podName {
@@ -99,7 +160,9 @@ func run(ctx context.Context, namespace, podName string) error {
 		if nil != err {
 			return err
 		}
-		collect_stupid_data(ctx, clientset, *pod)
+		if _, ok := pod.Annotations[ADD_KEY]; !ok {
+			collect_stupid_data(ctx, clientset, *pod)
+		}
 		return nil
 	}
 
@@ -111,7 +174,9 @@ func run(ctx context.Context, namespace, podName string) error {
 
 	log.Warnf("Start to get namespace %s pods list annotation", namespace)
 	for _, pod := range podList.Items {
-		collect_stupid_data(ctx, clientset, pod)
+		if _, ok := pod.Annotations[ADD_KEY]; !ok {
+			collect_stupid_data(ctx, clientset, pod)
+		}
 	}
 	return nil
 }
@@ -158,12 +223,12 @@ func collect_stupid_data(ctx context.Context, clientset *kubernetes.Clientset, p
 				return
 			}
 
-			tmpshit, err := json.Marshal(poolInfo)
-			if nil != err {
-				log.Error("marshal挂了, ", err)
-				return
-			}
-			log.Info("打印看看: ", string(tmpshit))
+			/*			tmpshit, err := json.Marshal(poolInfo)
+						if nil != err {
+							log.Error("marshal挂了, ", err)
+							return
+						}
+						log.Info("打印看看: ", string(tmpshit))*/
 
 			// vlanID
 			tmp_annotation.VlanID = strconv.Itoa(poolInfo.DisplayVlan)
