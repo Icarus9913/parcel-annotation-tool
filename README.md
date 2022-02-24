@@ -6,12 +6,11 @@
 
 
 
-该工具有三种模式，
-* 1、默认模式执行后会输出patch命令，需要执行者手动去给pod ptach annotation
+该工具有两种模式，
+* 1、默认模式执行后会输出patch命令，需要执行者手动去给pod patch annotation
+``` ./annotationTool run ```
 * 2、输出patch执行命令到一个名为anno.sh的shell文件，直接执行shell文件即可
 ``` ./annotationTool --out-to-shell run ```
-* 3、自动模式情况下该工具会帮你自动给pod打上annotation
-``` ./annotationTool --really-do-it run  ```
 
 ------------------
 使用方法：

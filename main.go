@@ -41,15 +41,17 @@ func main() {
 
 }
 
+// TODO: 当前打annotation的方式是patch，后续需要改进为kubectl annotate pods foo description='my frontend'
+// 以防止不确定的特殊情况下导致pod重启
 func startCMD() {
 	app := &cli.App{
 		Name:  "parcel upgrade from 4.0.3 to 4.0.7 annotation adding tool",
 		Usage: "",
 		Flags: []cli.Flag{
-			&cli.BoolFlag{
-				Name:  "really-do-it",
-				Usage: "pass the flag if you wanna patch the annotation with tool automatation",
-			},
+			//&cli.BoolFlag{
+			//	Name:  "really-do-it",
+			//	Usage: "pass the flag if you wanna patch the annotation with tool automatation",
+			//},
 			&cli.StringFlag{
 				Name:  "namespace",
 				Usage: "pass the specific namespace that you need to patch the annotation",
@@ -81,7 +83,8 @@ var runCmd = &cli.Command{
 	Action: func(cctx *cli.Context) error {
 		ctx := context.TODO()
 
-		runningMode := cctx.Bool("really-do-it")
+		//runningMode := cctx.Bool("really-do-it")
+		runningMode := false
 		namespace := cctx.String("namespace")
 		podName := cctx.String("podName")
 		out2shell := cctx.Bool("out-to-shell")
