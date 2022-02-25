@@ -6,7 +6,6 @@ ENV GO111MODULE=on \
     GOARCH=amd64 \
     GOPROXY="https://goproxy.cn,direct"
 
-WORKDIR /app/parcel-annotation-tool
-COPY * ./
-#RUN go mod download && go build -ldflags="-w -s" -o annotationTool main.go
+WORKDIR /root/parcel-annotation-tool
+COPY . .
 RUN make all

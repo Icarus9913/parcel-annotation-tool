@@ -12,7 +12,7 @@ import (
 )
 
 // etcd-configuration
-var ETCD_URL = "https://1.1.1.1:12379"
+var ETCD_URL = "https://127.0.0.1:12379"
 var ETCD_CA = "./certs/etcd-secrets/etcd-ca"
 var ETCD_KEY = "./certs/etcd-secrets/etcd-key"
 var ETCD_CERT = "./certs/etcd-secrets/etcd-cert"
@@ -68,11 +68,10 @@ func Initialize() {
 	}
 
 	if !IsDir(ETCD_CER_Prefix) {
-		log.Info("不存在/etcd-secrets证书目录文件, 使用默认配置")
-		return
+		log.Fatal("Dir 'etcd-secrets' does exist!!! Please copy it from parcel-server container, put it with this tool in the same path")
 	}
 
-	log.Infof("本地存在%s证书目录文件", ETCD_CER_Prefix)
+	log.Infof("%s dir exists.", ETCD_CER_Prefix)
 
 	ETCD_CA, ETCD_CERT, ETCD_KEY = "", "", ""
 	EtcdConfigCaPath = ETCD_CER_Prefix + "/etcd-ca"
@@ -82,24 +81,20 @@ func Initialize() {
 	if existFile(EtcdConfigCaPath) {
 		ETCD_CA = EtcdConfigCaPath
 	} else {
-		log.Error("EtcdConfigCaPath不存在")
-		return
+		log.Fatalf("%s does not exist!!", EtcdConfigCaPath)
 	}
 
 	if existFile(EtcdConfigCertPath) {
 		ETCD_CERT = EtcdConfigCertPath
 	} else {
-		log.Error("EtcdConfigCertPath不存在")
-		return
+		log.Fatalf("%s does not exist!!", EtcdConfigCertPath)
 	}
 
 	if existFile(EtcdConfigKeyPath) {
 		ETCD_KEY = EtcdConfigKeyPath
 	} else {
-		log.Error("EtcdConfigKeyPath不存在")
-		return
+		log.Fatalf("%s does not exist!!", EtcdConfigKeyPath)
 	}
-
 }
 
 func IsDir(path string) bool {
