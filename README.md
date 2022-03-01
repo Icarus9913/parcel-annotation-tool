@@ -5,14 +5,18 @@
 ---------------------------------
 
 
+安装方法：
+* 步骤1：x86的linux且有golang环境，直接执行``` make all ```后将生成annotationTool二进制文件。  
+        或使用Dockerfile生成一个镜像，将该镜像容器里的annotationTool移出来
+* 步骤2：从parcel-server容器里拷贝一个名为etcd-secrets的证书文件夹，放到与annotationTool二进制文件相同的路径下
+---------------
 
-该工具有两种模式，
-* 1、默认模式执行后会输出patch命令，需要执行者手动去给pod patch annotation
+使用方法:
+* 模式一：默认模式执行后会输出patch命令，需要执行者手动去给pod patch annotation  
 ``` ./annotationTool run ```
-* 2、输出patch执行命令到一个名为anno.sh的shell文件，直接执行shell文件即可
-``` ./annotationTool --out-to-shell run ```
 
-------------------
-使用方法：
-* X86的linux下直接执行``` make all ```后将生成annotationTool二进制文件。或使用Dockerfile生成一个镜像，将该镜像容器里的annotationTool移出来
-* 从parcel-server容器里拷贝一个名为etcd-secrets的证书文件夹，放到与annotationTool二进制文件相同的路径下
+
+* 模式二输出patch执行命令到一个名为anno.sh的shell文件，直接执行shell文件即可.  //注意--out-to-shell参数需放在run之前.  
+``` ./annotationTool --out-to-shell run ```  
+``` ./anno.sh```
+

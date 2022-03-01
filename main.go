@@ -105,6 +105,11 @@ func run(ctx context.Context, namespace, podName string, runningMode, out2shell 
 	}
 
 	if out2shell {
+		// remove the old first
+		if util.ExistFile(shellFile) {
+			os.Remove(shellFile)
+		}
+
 		file, err := os.OpenFile(shellFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 		if nil != err {
 			return errors.New("Open file " + shellFile + "failed with err: " + err.Error())
@@ -129,6 +134,9 @@ func run(ctx context.Context, namespace, podName string, runningMode, out2shell 
 
 		if _, ok := pod.Annotations[ADD_KEY]; !ok {
 			collect_stupid_data(ctx, clientset, *pod, runningMode, out2shell)
+			if out2shell {
+				fmt.Println("Finished! Please check 'anno.sh' ")
+			}
 			return nil
 		}
 		log.Warnf("Pod %s already has the annotation %s, skip it!", podName, ADD_KEY)
@@ -154,6 +162,9 @@ func run(ctx context.Context, namespace, podName string, runningMode, out2shell 
 		if _, ok := pod.Annotations[ADD_KEY]; !ok {
 			collect_stupid_data(ctx, clientset, pod, runningMode, out2shell)
 		}
+	}
+	if out2shell {
+		fmt.Println("Finished! Please check 'anno.sh' ")
 	}
 	return nil
 }

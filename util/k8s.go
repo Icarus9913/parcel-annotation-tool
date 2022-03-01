@@ -20,7 +20,7 @@ var (
 	KubeConfigPath = filepath.Join(os.Getenv("HOME"), ".kube", "config")
 )
 
-func existFile(filePath string) bool {
+func ExistFile(filePath string) bool {
 	if info, err := os.Stat(filePath); err == nil {
 		if !info.IsDir() {
 			return true
@@ -43,7 +43,7 @@ func autoConfig() (*rest.Config, error) {
 	var config *rest.Config
 	var err error
 
-	if existFile(KubeConfigPath) == true {
+	if ExistFile(KubeConfigPath) == true {
 
 		config, err = clientcmd.BuildConfigFromFlags("", KubeConfigPath)
 		if err != nil {

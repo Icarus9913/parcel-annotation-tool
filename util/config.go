@@ -68,7 +68,7 @@ func Initialize() {
 	}
 
 	if !IsDir(ETCD_CER_Prefix) {
-		log.Fatal("Dir 'etcd-secrets' does exist!!! Please copy it from parcel-server container, put it with this tool in the same path")
+		log.Fatal("Dir 'etcd-secrets' does not exist!!! Please copy it from parcel-server container, put it with this tool in the same path")
 	}
 
 	log.Infof("%s dir exists.", ETCD_CER_Prefix)
@@ -78,19 +78,19 @@ func Initialize() {
 	EtcdConfigCertPath = ETCD_CER_Prefix + "/etcd-cert"
 	EtcdConfigKeyPath = ETCD_CER_Prefix + "/etcd-key"
 
-	if existFile(EtcdConfigCaPath) {
+	if ExistFile(EtcdConfigCaPath) {
 		ETCD_CA = EtcdConfigCaPath
 	} else {
 		log.Fatalf("%s does not exist!!", EtcdConfigCaPath)
 	}
 
-	if existFile(EtcdConfigCertPath) {
+	if ExistFile(EtcdConfigCertPath) {
 		ETCD_CERT = EtcdConfigCertPath
 	} else {
 		log.Fatalf("%s does not exist!!", EtcdConfigCertPath)
 	}
 
-	if existFile(EtcdConfigKeyPath) {
+	if ExistFile(EtcdConfigKeyPath) {
 		ETCD_KEY = EtcdConfigKeyPath
 	} else {
 		log.Fatalf("%s does not exist!!", EtcdConfigKeyPath)
