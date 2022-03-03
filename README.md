@@ -8,7 +8,7 @@
 安装方法：
 * 步骤1：x86的linux且有golang环境，直接执行``` make all ```后将生成annotationTool二进制文件。  
         或使用Dockerfile生成一个镜像，将该镜像容器里的annotationTool移出来
-* 步骤2：从parcel-server容器里拷贝一个名为etcd-secrets的证书文件夹，放到与annotationTool二进制文件相同的路径下
+* 步骤2：从parcel-server容器里拷贝一个名为``` etcd-secrets ``` 的证书文件夹，放到与annotationTool二进制文件相同的路径下
 ---------------
 
 使用方法:

@@ -135,7 +135,7 @@ func run(ctx context.Context, namespace, podName string, runningMode, out2shell 
 		if _, ok := pod.Annotations[ADD_KEY]; !ok {
 			collect_stupid_data(ctx, clientset, *pod, runningMode, out2shell)
 			if out2shell {
-				fmt.Println("Finished! Please check 'anno.sh' ")
+				log.Info("Finished! Please check 'anno.sh' ")
 			}
 			return nil
 		}
@@ -150,6 +150,7 @@ func run(ctx context.Context, namespace, podName string, runningMode, out2shell 
 	}
 
 	log.Warnf("Start to get namespace %s pods list annotation", namespace)
+	count := 0
 	for _, pod := range podList.Items {
 		if pod.Annotations[PARCEL_NET_TYPE] != "ovs" {
 			continue
@@ -161,10 +162,16 @@ func run(ctx context.Context, namespace, podName string, runningMode, out2shell 
 
 		if _, ok := pod.Annotations[ADD_KEY]; !ok {
 			collect_stupid_data(ctx, clientset, pod, runningMode, out2shell)
+			count++
 		}
 	}
+	if count == 0 {
+		log.Infof("All pods have '%s' annotation, skip it!", ADD_KEY)
+		return nil
+	}
+
 	if out2shell {
-		fmt.Println("Finished! Please check 'anno.sh' ")
+		log.Info("Finished! Please check 'anno.sh' ")
 	}
 	return nil
 }
