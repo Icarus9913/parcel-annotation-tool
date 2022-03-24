@@ -197,7 +197,7 @@ func collect_stupid_data(ctx context.Context, clientset *kubernetes.Clientset, p
 	if tmp_annotation.PoolName != "" {
 		tmp_split_poolName := strings.Split(tmp_annotation.PoolName, "-")
 		tmp_subnet_name := tmp_split_poolName[0]
-		tmp_ns := tmp_split_poolName[1]
+		tmp_ns := strings.Split(tmp_annotation.PoolName, tmp_subnet_name+"-")[1]
 
 		var poolInfo model.IPPool
 		etcdV3Client, err := util.NewEtcd()
@@ -217,7 +217,7 @@ func collect_stupid_data(ctx context.Context, clientset *kubernetes.Clientset, p
 			return
 		}
 		if len(response.Kvs) == 0 {
-			log.Errorf("Gtting pod %s with no ippool %s data from ETCD, please check ETCD with key: %s", pod.Name, tmp_annotation.PoolName, tmp_prefix)
+			log.Errorf("Getting pod %s with no ippool %s data from ETCD, please check ETCD with key: %s", pod.Name, tmp_annotation.PoolName, tmp_prefix)
 			return
 		}
 
