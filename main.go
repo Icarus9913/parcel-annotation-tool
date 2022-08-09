@@ -309,7 +309,7 @@ func collect_stupid_data(ctx context.Context, clientset *kubernetes.Clientset, p
 	}
 
 	if out2shell {
-		tmp_data := fmt.Sprintf("kubectl patch pod %s --patch '%s' \n", pod.Name, string(patchResult))
+		tmp_data := fmt.Sprintf("kubectl -n %s patch pod %s --patch '%s' \n", pod.Namespace, pod.Name, string(patchResult))
 		_, err := buf.Write([]byte(tmp_data))
 		if nil != err {
 			log.Errorf("Write [  %s  ] to file with err %v", tmp_data, err)
@@ -317,7 +317,7 @@ func collect_stupid_data(ctx context.Context, clientset *kubernetes.Clientset, p
 		buf.Flush()
 		return
 	}
-	log.Infof("Please run the command by yourself: kubectl patch pod %s --patch '%s'", pod.Name, string(patchResult))
+	log.Infof("Please run the command by yourself: kubectl -n %s patch pod %s --patch '%s'", pod.Namespace, pod.Name, string(patchResult))
 
 }
 
